@@ -72,8 +72,8 @@ public class GameView extends GridLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        int cardWidth = (Math.min(w, h) - 20) / 4;
-        addCards(cardWidth, cardWidth);
+        Config.CARD_WIDTH = (Math.min(w, h) - 20) / 4;
+        addCards(Config.CARD_WIDTH, Config.CARD_WIDTH);
         startGame();
     }
 
@@ -114,21 +114,136 @@ public class GameView extends GridLayout {
 
         Point p = emptyPoints.remove((int) (Math.random() * emptyPoints.size()));
         cardsMap[p.x][p.y].setNum(Math.random() > 0.1 ? 2 : 4);
+        MainActivity.getMainActivity().getAnimLayer().createScaleTo1(cardsMap[p.x][p.y]);
+    }
+
+    private void swipeLeft() {
+        boolean merge = false;
+        for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 4; x++) {
+
+                for (int i = x + 1; i < 4; i++) {
+                    if (cardsMap[i][y].getNum() > 0) {
+
+                        if (cardsMap[x][y].getNum() <= 0) {
+//                            MainActivity.getMainActivity().getAnimLayer().createMoveAnim(cardsMap[i][y], cardsMap[x][y],i, x, y, y);
+
+                            cardsMap[x][y].setNum(cardsMap[i][y].getNum());
+                            cardsMap[i][y].setNum(0);
+
+                            x--;
+                            merge = true;
+                        } else if (cardsMap[x][y].equals(cardsMap[i][y])) {
+//                            MainActivity.getMainActivity().getAnimLayer().createMoveAnim(cardsMap[i][y], cardsMap[x][y],i, x, y, y);
+                            cardsMap[x][y].setNum(cardsMap[x][y].getNum() * 2);
+                            cardsMap[i][y].setNum(0);
+
+                            addScord(cardsMap[x][y].getNum());
+                            merge = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (merge) {
+            addRandomNum();
+            checkComplete();
+        }
+    }
+
+    private void swipeRight() {
+        boolean merge = false;
+        for (int y = 0; y < 4; y++) {
+            for (int x = 3; x >= 0; x--) {
+
+                for (int i = x - 1; i >= 0; i--) {
+                    if (cardsMap[i][y].getNum() > 0) {
+
+                        if (cardsMap[x][y].getNum() <= 0) {
+//                            MainActivity.getMainActivity().getAnimLayer().createMoveAnim(cardsMap[i][y], cardsMap[x][y],i, x, y, y);
+
+                            cardsMap[x][y].setNum(cardsMap[i][y].getNum());
+                            cardsMap[i][y].setNum(0);
+
+                            x++;
+                            merge = true;
+                        } else if (cardsMap[x][y].equals(cardsMap[i][y])) {
+//                            MainActivity.getMainActivity().getAnimLayer().createMoveAnim(cardsMap[i][y], cardsMap[x][y],i, x, y, y);
+                            cardsMap[x][y].setNum(cardsMap[x][y].getNum() * 2);
+                            cardsMap[i][y].setNum(0);
+
+                            addScord(cardsMap[x][y].getNum());
+                            merge = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (merge) {
+            addRandomNum();
+            checkComplete();
+        }
+    }
+
+    private void swipeTop() {
+        boolean merge = false;
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+
+                for (int i = y + 1; i < 4; i++) {
+                    if (cardsMap[x][i].getNum() > 0) {
+                        if (cardsMap[x][y].getNum() <= 0) {
+//                            MainActivity.getMainActivity().getAnimLayer().createMoveAnim(cardsMap[x][i], cardsMap[x][y], x, x, i, y);
+
+                            cardsMap[x][y].setNum(cardsMap[x][i].getNum());
+                            cardsMap[x][i].setNum(0);
+
+                            y--;
+                            merge = true;
+                        } else if (cardsMap[x][y].equals(cardsMap[x][i])) {
+//                            MainActivity.getMainActivity().getAnimLayer().createMoveAnim(cardsMap[x][i], cardsMap[x][y], x, x, i, y);
+
+                            cardsMap[x][y].setNum(cardsMap[x][y].getNum() * 2);
+                            cardsMap[x][i].setNum(0);
+
+                            addScord(cardsMap[x][y].getNum());
+                            merge = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (merge) {
+            addRandomNum();
+            checkComplete();
+        }
     }
 
     private void swipeDown() {
         boolean merge = false;
         for (int x = 0; x < 4; x++) {
             for (int y = 3; y >= 0; y--) {
+
                 for (int i = y - 1  ; i >= 0; i--) {
                     if (cardsMap[x][i].getNum() > 0) {
+
                         if (cardsMap[x][y].getNum() <= 0) {
+//                            MainActivity.getMainActivity().getAnimLayer().createMoveAnim(cardsMap[x][i], cardsMap[x][y], x, x, i, y);
+
                             cardsMap[x][y].setNum(cardsMap[x][i].getNum());
                             cardsMap[x][i].setNum(0);
 
                             y++;
                             merge = true;
                         } else if (cardsMap[x][y].equals(cardsMap[x][i])) {
+//                            MainActivity.getMainActivity().getAnimLayer().createMoveAnim(cardsMap[x][i], cardsMap[x][y], x, x, i, y);
+
                             cardsMap[x][y].setNum(cardsMap[x][y].getNum() * 2);
                             cardsMap[x][i].setNum(0);
 
@@ -143,100 +258,7 @@ public class GameView extends GridLayout {
 
         if (merge) {
             addRandomNum();
-            merge = false;
-        }
-    }
-
-    private void swipeTop() {
-        boolean merge = false;
-        for (int x = 0; x < 4; x++) {
-            for (int y = 0; y < 4; y++) {
-                for (int i = y + 1; i < 4; i++) {
-                    if (cardsMap[x][i].getNum() > 0) {
-                        if (cardsMap[x][y].getNum() <= 0) {
-                            cardsMap[x][y].setNum(cardsMap[x][i].getNum());
-                            cardsMap[x][i].setNum(0);
-
-                            y--;
-                            merge = true;
-                        } else if (cardsMap[x][y].equals(cardsMap[x][i])) {
-                            cardsMap[x][y].setNum(cardsMap[x][y].getNum() * 2);
-                            cardsMap[x][i].setNum(0);
-
-                            addScord(cardsMap[x][y].getNum());
-                            merge = true;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (merge) {
-            addRandomNum();
-            merge = false;
-        }
-    }
-
-    private void swipeLeft() {
-        boolean merge = false;
-        for (int y = 0; y < 4; y++) {
-            for (int x = 0; x < 4; x++) {
-                for (int i = x + 1; i < 4; i++) {
-                    if (cardsMap[i][y].getNum() > 0) {
-                        if (cardsMap[x][y].getNum() <= 0) {
-                            cardsMap[x][y].setNum(cardsMap[i][y].getNum());
-                            cardsMap[i][y].setNum(0);
-
-                            x--;
-                            merge = true;
-                        } else if (cardsMap[x][y].equals(cardsMap[i][y])) {
-                            cardsMap[x][y].setNum(cardsMap[x][y].getNum() * 2);
-                            cardsMap[i][y].setNum(0);
-
-                            addScord(cardsMap[x][y].getNum());
-                            merge = true;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (merge) {
-            addRandomNum();
-            merge = false;
-        }
-    }
-
-    private void swipeRight() {
-        boolean merge = false;
-        for (int y = 0; y < 4; y++) {
-            for (int x = 3; x >= 0; x--) {
-                for (int i = x - 1; i >= 0; i--) {
-                    if (cardsMap[i][y].getNum() > 0) {
-                        if (cardsMap[x][y].getNum() <= 0) {
-                            cardsMap[x][y].setNum(cardsMap[i][y].getNum());
-                            cardsMap[i][y].setNum(0);
-
-                            x++;
-                            merge = true;
-                        } else if (cardsMap[x][y].equals(cardsMap[i][y])) {
-                            cardsMap[x][y].setNum(cardsMap[x][y].getNum() * 2);
-                            cardsMap[i][y].setNum(0);
-
-                            addScord(cardsMap[x][y].getNum());
-                            merge = true;
-                        }
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (merge) {
-            addRandomNum();
-            merge = false;
+            checkComplete();
         }
     }
 

@@ -8,6 +8,8 @@ public class MainActivity extends AppCompatActivity {
     private static MainActivity mainActivity = null;
     private TextView tvScore;
     private int score = 0;
+    private AnimLayer animLayer;
+
     public MainActivity() {
         mainActivity = this;
     }
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvScore = (TextView) findViewById(R.id.tvScore);
+        animLayer = (AnimLayer) findViewById(R.id.animLayer);
     }
 
     public static MainActivity getMainActivity() {
@@ -24,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clearScore() {
-            score = 0;
+        score = 0;
         showScore();
     }
 
@@ -35,5 +38,9 @@ public class MainActivity extends AppCompatActivity {
     public void addScore(int s) {
         score += s;
         showScore();
+    }
+
+    public AnimLayer getAnimLayer() {
+        return animLayer;
     }
 }

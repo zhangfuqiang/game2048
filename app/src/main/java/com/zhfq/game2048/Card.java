@@ -2,6 +2,7 @@ package com.zhfq.game2048;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -12,18 +13,30 @@ import android.widget.TextView;
 public class Card extends FrameLayout {
     private int num = 0;
     private TextView label;
-    private int[] colors = {0xffeee4da, 0xffede0c8, 0xfff2b179, 0xfff59563, 0xfff67c5f, 0xfff65e3b, 0xffedcf72, 0xffedcb60,
-    0xffedc850, 0xffedc53f};
+    private View background;
 
     public Card(Context context) {
         super(context);
+
+        LayoutParams lp;
+
+        background = new View(getContext());
+        lp = new LayoutParams(-1, -1);
+        lp.setMargins(10, 10, 0, 0);
+        background.setBackgroundColor(0x33ffffff);
+        addView(background, lp);
+
         label = new TextView(getContext());
-        label.setTextSize(18);
+        label.setTextSize(25);
         label.setGravity(Gravity.CENTER);
 
-        LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         lp.setMargins(20, 20, 0, 0);
         addView(label, lp);
+    }
+
+    public TextView getLabel() {
+        return label;
     }
 
     public int getNum() {
@@ -40,7 +53,7 @@ public class Card extends FrameLayout {
 
         switch (num) {
             case 0:
-                label.setBackgroundColor(0x00000000);//透明色
+                label.setBackgroundColor(0x00000000);
                 break;
             case 2:
                 label.setBackgroundColor(0xffeee4da);
@@ -53,6 +66,27 @@ public class Card extends FrameLayout {
                 break;
             case 16:
                 label.setBackgroundColor(0xfff59563);
+                break;
+            case 32:
+                label.setBackgroundColor(0xfff67c5f);
+                break;
+            case 64:
+                label.setBackgroundColor(0xfff65e3b);
+                break;
+            case 128:
+                label.setBackgroundColor(0xffedcf72);
+                break;
+            case 256:
+                label.setBackgroundColor(0xffedcc61);
+                break;
+            case 512:
+                label.setBackgroundColor(0xffedc850);
+                break;
+            case 1024:
+                label.setBackgroundColor(0xffedc53f);
+                break;
+            case 2048:
+                label.setBackgroundColor(0xffedc22e);
                 break;
             default:
                 label.setBackgroundColor(0xff3c3a32);
